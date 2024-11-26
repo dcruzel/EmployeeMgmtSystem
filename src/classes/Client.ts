@@ -1,7 +1,11 @@
 // importing classes from other files
 import inquirer from "inquirer"; 
 import { QueryResult } from 'pg';
-import { pool, connectToDb } from './connection.js';
+import { pool, connectToDb } from '../connection.js';
+
+await connectToDb();
+
+const PORT = process.env.PORT || 3001;
 
 //define a client
 class Client {
@@ -11,13 +15,66 @@ class Client {
     constructor(menu:string){
         this.menu = menu;
     }
+    //view the employees table
+    viewEmployees():void {
+        const sql = `SELECT employee.id, 
+            employee.first_name, 
+            employee.last_name, 
+            department.name as department_name, 
+            role.title, 
+            role.salary 
+            FROM employee 
+            JOIN role ON employee.role_id=role.id 
+            JOIN department ON role.department_id = department.id
+            ORDER BY id;`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+          if (err) {
+            console.log(err);
+            this.startClient();
+            return;
+          }
+          console.log("");
+          console.table(result.rows);
+          this.startClient();
+        });
+    }
 
-    
+    //view the departments table
+    viewDepartments():void {
+        const sql = `SELECT * FROM department`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+          if (err) {
+            console.log(err);
+            this.startClient();
+            return;
+          }
+          console.log("");
+          console.table(result.rows);
+          this.startClient();
+        });
+    }
+
+    //view the Role table
+    viewRoles():void {
+        const sql = `SELECT * FROM role`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+          if (err) {
+            console.log(err);
+            this.startClient();
+            return;
+          }
+          console.log("");
+          console.table(result.rows);
+          this.startClient();
+        });
+    }
 
     startClient(): void {
-        console.log("---------------------------------------");
-        console.log(`--------------${this.menu.toUpperCase}---------------------`);
-        console.log("---------------------------------------");
+        console.log("___________________________________________________________________________");
+        console.log(`           ${this.menu.toUpperCase()}               `);
+        console.log("___________________________________________________________________________");
+
+        //prompt the available choices
         inquirer
         .prompt([
             {
@@ -38,16 +95,16 @@ class Client {
             }, 
         ])
         .then((answers: {Task:string})=>{
-            console.log(answers.Task);
+            //Using switch, use the correct functions
             switch(answers.Task){
                 case 'View all departments':
-                    console.log("View depts");
+                    this.viewDepartments();
                     break;
                 case 'View all roles':
-                    console.log("View roles");
+                    this.viewRoles();
                     break;
                 case 'View all employees':
-                    console.log("View employees");
+                    this.viewEmployees();
                     break;
                 case 'Add a department':
                     console.log('Add a department');
