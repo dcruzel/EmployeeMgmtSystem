@@ -18,7 +18,6 @@ This project is to build a command-line application to manage a company's employ
 - [Introduction](#introduction)
 - [Technology](#technology)
 - [Usage](#usage)
-- [Tests](#tests)
 - [Contact](#credits)
 - [License](#license)
 
@@ -55,12 +54,8 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Usage
 - [Github Repo](https://github.com/dcruzel/EmployeeMgmtSystem)
-- [Video](https://drive.google.com/file/d/1idjt0aR4dDSOCgFquhARCZmUR73iKCNm/view?usp=sharing)
+- [Video](https://drive.google.com/file/d/17L7xUFCKrRvnwuvwPiYktcNbTOYdMBp7/view?usp=sharing)
 
-## Tests
-```md
--
-```
 
 ## Contact
 

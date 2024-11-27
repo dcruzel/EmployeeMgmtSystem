@@ -1,3 +1,5 @@
+//Got from bootcamp Module 10 - SQL activity 24
+
 import dotenv from 'dotenv';
 dotenv.config();
 
