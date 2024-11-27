@@ -27,3 +27,5 @@ VALUES
 UPDATE employee
 SET role_id = 6
 WHERE id = 50;
+-- Delete department by id
+DELETE FROM department WHERE id = 12;
