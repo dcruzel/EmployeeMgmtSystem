@@ -1,4 +1,4 @@
-// importing classes from other files
+// importing classes from other files and got the import, connectToDB and PORT from bootcamp Module 10 - SQL activity 24
 import inquirer from "inquirer"; 
 import { QueryResult } from 'pg';
 import { pool, connectToDb } from '../connection.js';
@@ -83,7 +83,6 @@ class Client {
           }
           console.log("");
           last_id = result.rows[0].id+1  || 1;
-          console.log (last_id);
         });
         inquirer
         .prompt([
@@ -153,7 +152,6 @@ class Client {
         {
             sql = `INSERT INTO role VALUES (${last_id},'${String(response.roleName)}', 
                 ${parseFloat(response.roleSalary)}, ${parseInt(response.roleDept, 10)})`;
-            console.log(sql);
             pool.query(sql, (err: Error, result: QueryResult) => {
                 if (err) {
                     console.log(err);
@@ -211,7 +209,6 @@ class Client {
         {
             sql = `INSERT INTO employee VALUES (${last_id},'${String(response.firstName)}','${String(response.lastName)}', 
                 ${parseInt(response.roleId)}, ${parseInt(response.managerId)})`;
-            console.log(sql);
             pool.query(sql, (err: Error, result: QueryResult) => {
                 if (err) {
                     console.log(err);
@@ -243,6 +240,7 @@ class Client {
         ])
         .then((response) => 
         {
+            //Update the employee's role id by using the employee id
             let sql = `UPDATE employee VALUES SET role_id = ${parseInt(response.roleId)}
             WHERE id = ${parseInt(response.employeeId)}`;
             pool.query(sql, (err: Error, result: QueryResult) => {
@@ -260,6 +258,9 @@ class Client {
 
 
     startClient(): void {
+
+        //Print out MENU title
+        
         console.log("");
         console.log("___________________________________________________________________________");
         console.log(`                      ${this.menu.toUpperCase()}               `);
