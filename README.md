@@ -5,6 +5,11 @@
 ```md
 This project is to build a command-line application to manage a company's employee database.  
 ```
+The database schema as shown in the following image:
+
+![Database schema includes tables labeled “employee,” role,” and “department.”](./Assets/100-sql-challenge-ERD.png)
+
+
 ## User Story
 ```md
 - AS A business owner
@@ -25,7 +30,7 @@ This project is to build a command-line application to manage a company's employ
 ```md
 GIVEN a command-line application that accepts user input
 WHEN I start the application
-THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, update an employee role, update an employee's manager, delete a department, delete a role, delete an employee, view employees by manager, view employees by department and view the total utilized budget of a department
 WHEN I choose to view all departments
 THEN I am presented with a formatted table showing department names and department ids
 WHEN I choose to view all roles
@@ -40,6 +45,20 @@ WHEN I choose to add an employee
 THEN I am prompted to enter the employee's first name, last name, role, and manager, and that employee is added to the database
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+WHEN I choose to update the employee's manager
+THEN I am prompted to enter the employee's manager's id and this information is updated in the database
+WHEN I choose to delete a department
+THEN I am prompted to enter the department id to delete and this information is deleted in the database, but it can't have associated employees due to foreign key rules
+WHEN I choose to delete a role
+THEN I am prompted to enter the role id and this information is deleted in the database, but it can't have associated employees due to foreign key rules
+WHEN I choose to delete a employee
+THEN I am prompted to enter the role id and this information is deleted in the database
+WHEN I choose to view the employees by manager
+THEN I am presented with a formatted table showing the employees name by manager
+WHEN I choose to view the employees by department
+THEN I am presented with a formatted table showing the employees name by department
+WHEN I choose to view the total utilized budget of a department
+THEN I am presented with a formatted table showing the department name and the total salary
 ```
 
 ## Technology
@@ -54,7 +73,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Usage
 - [Github Repo](https://github.com/dcruzel/EmployeeMgmtSystem)
-- [Video](https://drive.google.com/file/d/17L7xUFCKrRvnwuvwPiYktcNbTOYdMBp7/view?usp=sharing)
+- [Video](https://drive.google.com/file/d/1sDMPuunnOFMpPNdsR5j2_P7IRMoxgsf0/view?usp=sharing)
 
 
 ## Contact

@@ -23,7 +23,8 @@ class Client {
             employee.last_name, 
             department.name as department_name, 
             role.title, 
-            role.salary 
+            role.salary, 
+            employee.manager_id 
             FROM employee 
             JOIN role ON employee.role_id=role.id 
             JOIN department ON role.department_id = department.id
@@ -221,6 +222,102 @@ class Client {
             });
         });
     }
+
+    //delete department in the Department table
+    deleteDepartment():void {
+        inquirer
+        .prompt([
+            {
+                type: 'input', 
+                message: 'What is the department id?',
+                name: 'departmentId'
+            },
+        ])
+        .then((response) => 
+        {
+            if (!response.departmentId) {
+                console.log(`Response cannot be blank`);
+                this.startClient();
+                return;
+            }
+            let sql = `DELETE FROM department WHERE id = CAST($1 AS INTEGER)`;
+            const params = [response.departmentId];
+            pool.query(sql, params, (err: Error, result: QueryResult) => {
+                if (err) {
+                    console.log(err);
+                    this.startClient();
+                    return;
+                }
+                console.log("");
+                console.log("Deleted department");
+                this.startClient();
+            });
+        });
+    }
+
+    //delete role in the Role table
+    deleteRole():void {
+        inquirer
+        .prompt([
+            {
+                type: 'input', 
+                message: 'What is the role id?',
+                name: 'roleId'
+            },
+        ])
+        .then((response) => 
+        {
+            if (!response.roleId) {
+                console.log(`Response cannot be blank`);
+                this.startClient();
+                return;
+            }
+            let sql = `DELETE FROM role WHERE id = CAST($1 AS INTEGER)`;
+            const params = [response.roleId];
+            pool.query(sql, params, (err: Error, result: QueryResult) => {
+                if (err) {
+                    console.log(err);
+                    this.startClient();
+                    return;
+                }
+                console.log("");
+                console.log("Deleted department");
+                this.startClient();
+            });
+        });
+    }
+
+    //delete employee in the Employee table
+    deleteEmployee():void {
+        inquirer
+        .prompt([
+            {
+                type: 'input', 
+                message: 'What is the employee id?',
+                name: 'employeeId'
+            },
+        ])
+        .then((response) => 
+        {
+            if (!response.employeeId) {
+                console.log(`Response cannot be blank`);
+                this.startClient();
+                return;
+            }
+            let sql = `DELETE FROM employee WHERE id = CAST($1 AS INTEGER)`;
+            const params = [response.employeeId];
+            pool.query(sql, params, (err: Error, result: QueryResult) => {
+                if (err) {
+                    console.log(err);
+                    this.startClient();
+                    return;
+                }
+                console.log("");
+                console.log("Deleted employee");
+                this.startClient();
+            });
+        });
+    }
     //add employee into the Employee table
     updateEmployeeRole():void {
 
@@ -255,7 +352,103 @@ class Client {
             });
         });
     }
+    //add employee into the Employee table
+    updateEmployeeManager():void {
 
+    //Prompt client for the information
+        inquirer
+        .prompt([
+            {
+                type: 'input', 
+                message: 'What is the employee id that you want to update?',
+                name: 'employeeId'
+            },
+            {
+                type: 'input', 
+                essage: 'What is the manager id?',
+                name: 'managerId'
+            },
+            ])
+        .then((response) => 
+        {
+            //Update the employee's manager id by using the employee id
+            let updateManagerId;
+            if(response.managerId==""){
+                updateManagerId=null;
+            }else{
+                updateManagerId=parseInt(response.managerId)
+            }
+            let sql = `UPDATE employee VALUES SET manager_id = ${updateManagerId}
+            WHERE id = ${parseInt(response.employeeId)}`;
+        
+            pool.query(sql, (err: Error, result: QueryResult) => {
+                if (err) {
+                    console.log(err);
+                    this.startClient();
+                    return;
+                }
+                console.log("");
+                console.log("Updated manager ID for employee");
+                this.startClient();
+            });
+        });
+    }
+
+    viewEmployeeByManager():void {
+        const sql = `SELECT employee.manager_id as manager_id, 
+        employee.first_name AS first_name, employee.last_name AS last_name
+        FROM employee 
+        ORDER BY employee.manager_id;`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+            if (err) {
+                console.log(err);
+                this.startClient();
+            return;
+        }
+        console.log("");
+        console.table(result.rows);
+        this.startClient();
+        });
+    }
+    //view employee by department
+    viewEmployeeByDept():void {
+        const sql = `SELECT department.name as department_name, 
+        employee.first_name AS first_name, employee.last_name
+        FROM employee 
+        JOIN role ON employee.role_id=role.id 
+        JOIN department ON role.department_id = department.id
+        ORDER BY department.name;`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+            if (err) {
+                console.log(err);
+                this.startClient();
+            return;
+        }
+        console.log("");
+        console.table(result.rows);
+        this.startClient();
+        });
+    }
+    //View the total utilized budget of a department
+    sumSalaryByDept():void {
+        const sql = `SELECT department.name as department_name, 
+        SUM(role.salary) AS total_salary
+        FROM employee 
+        JOIN role ON employee.role_id=role.id 
+        JOIN department ON role.department_id = department.id
+        GROUP BY department.name
+        ORDER BY department.name;`;
+        pool.query(sql, (err: Error, result: QueryResult) => {
+            if (err) {
+                console.log(err);
+                this.startClient();
+            return;
+        }
+        console.log("");
+        console.table(result.rows);
+        this.startClient();
+        });
+    }
 
     startClient(): void {
 
@@ -281,7 +474,14 @@ class Client {
                     'Add a department', 
                     'Add a role', 
                     'Add an employee', 
+                    'Update an employee manager',
                     'Update an employee role',
+                    'Delete a department',
+                    'Delete a role',
+                    'Delete an employee',
+                    'View employees by manager',
+                    'View employees by department',
+                    'View the total utilized budget of a department',
                     'exit'
                 ],    
             }, 
@@ -307,8 +507,29 @@ class Client {
                 case 'Add an employee':
                     this.addEmployee();
                     break;
+                case 'Update an employee manager': 
+                    this.updateEmployeeManager();
+                    break;
                 case 'Update an employee role': 
                     this.updateEmployeeRole();
+                    break;
+                case 'Delete a department':
+                    this.deleteDepartment();
+                    break;
+                case 'Delete a role':
+                    this.deleteRole();
+                    break;
+                case 'Delete an employee':
+                    this.deleteEmployee();
+                    break;
+                case 'View employees by manager':
+                    this.viewEmployeeByManager();
+                    break;
+                case 'View employees by department':
+                    this.viewEmployeeByDept();
+                    break;
+                case 'View the total utilized budget of a department':
+                    this.sumSalaryByDept();
                     break;
                 case 'exit': 
                     this.exit = true;
