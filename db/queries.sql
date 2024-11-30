@@ -29,3 +29,10 @@ SET role_id = 6
 WHERE id = 50;
 -- Delete department by id
 DELETE FROM department WHERE id = 12;
+-- Allows users to view the total utilized budget of a department
+SELECT department.name as department_name, SUM(role.salary) AS total_salary
+FROM employee
+JOIN role ON employee.role_id = role.id
+JOIN department ON role.department_id = department.id
+GROUP BY department.name
+ORDER BY department.name;
